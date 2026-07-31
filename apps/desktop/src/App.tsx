@@ -41,6 +41,12 @@ function runtimeCards(runtime: Runtime): Card[] {
       name: "Memory + Summary",
       state: `session ${runtime.memory.id} — ${runtime.memory.all().length} events`,
     },
+    {
+      name: "Overlay",
+      state: cfg.overlay.enabled
+        ? `http://localhost:${cfg.overlay.port} — ${cfg.overlay.theme}`
+        : "disabled",
+    },
   ];
 }
 
@@ -66,7 +72,10 @@ export default function App() {
   }, []);
 
   const endSession = () => {
-    void runtime?.stop().then(() => setSessionEnded(true));
+    void runtime?.stop().then(() => {
+      setSessionEnded(true);
+      void invoke("overlay_stop").catch(() => {});
+    });
   };
 
   const cards = runtime ? runtimeCards(runtime) : [];

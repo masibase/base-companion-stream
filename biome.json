@@ -9,7 +9,8 @@
       "!apps/desktop/dist",
       "!apps/desktop/node_modules",
       "!apps/desktop/public",
-      "!apps/desktop/src-tauri"
+      "!apps/desktop/src-tauri",
+      "!apps/overlay"
     ]
   },
   "formatter": {

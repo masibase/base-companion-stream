@@ -2,8 +2,19 @@ import type { ConfigStore } from "@agent/config";
 import { Logger } from "@agent/logging";
 import { createRuntime, type Runtime } from "@agent/runtime";
 import { invoke } from "@tauri-apps/api/core";
+import { emit } from "@tauri-apps/api/event";
 
 export const KEYRING_PREFIX = "keyring:";
+
+const OVERLAY_EVENTS = [
+  "chat.message",
+  "response.ready",
+  "permission.denied",
+  "session.started",
+  "session.ended",
+  "summary.ready",
+  "config.changed",
+] as const;
 
 class TauriConfigStore implements ConfigStore {
   async read(): Promise<unknown> {
@@ -30,6 +41,24 @@ export function getRuntime(): Promise<Runtime> {
     configStore: new TauriConfigStore(),
     apiKeyProvider: keyringProvider,
     logger: new Logger("info"),
+  }).then((rt) => {
+    if (rt.config.get().overlay.enabled) {
+      void invoke("overlay_start", {
+        port: rt.config.get().overlay.port,
+      }).catch((err) =>
+        rt.logger.warn("overlay_start.failed", { error: String(err) }),
+      );
+      for (const type of OVERLAY_EVENTS) {
+        rt.bus.on(type, (event) => {
+          void emit("overlay.event", {
+            type: event.type,
+            ts: event.ts,
+            payload: event.payload,
+          });
+        });
+      }
+    }
+    return rt;
   });
   return runtimePromise;
 }

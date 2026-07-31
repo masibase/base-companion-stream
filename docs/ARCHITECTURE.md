@@ -43,6 +43,18 @@ mic ─► wake-word ("nova") ─► STT ─► voice.command ─► orchestrato
 session.ended ─► logging (collect session events) ─► analyst (highlights, stats, themes) ─► summary.ready ─► storage + dashboard
 ```
 
+## Overlay transport
+
+```
+desktop (webview) ── bus events (chat.message, response.ready, ...) ── emit("overlay.event")
+        ─► Rust std HTTP/SSE server (127.0.0.1:7935) ── GET /events (SSE)
+        ─► apps/overlay/index.html (single-file page, OBS browser source)
+GET /health ─► {"ok":true} (dashboard reachability check)
+```
+
+- Server: dependency-free std Rust (`apps/desktop/src-tauri/src/server.rs`), serves the single-file overlay + `/health` + SSE `/events`.
+- Started/stopped from the webview (`overlay_start` / `overlay_stop`), driven by `config.overlay`.
+
 ## Communication rules
 
 - All cross-module communication is typed events: `{ id, type, ts, source, payload }`

@@ -1,3 +1,9 @@
+mod server;
+
+use server::OverlayServer;
+use std::sync::Arc;
+use tauri::Listener;
+
 const SERVICE_NAME: &str = "agent-companion";
 
 fn config_path() -> Result<std::path::PathBuf, String> {
@@ -53,17 +59,39 @@ fn app_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 
+#[tauri::command]
+fn overlay_start(port: u16, server: tauri::State<'_, Arc<OverlayServer>>) -> Result<(), String> {
+    server.start(port)
+}
+
+#[tauri::command]
+fn overlay_stop(server: tauri::State<'_, Arc<OverlayServer>>) -> Result<(), String> {
+    server.stop();
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let overlay = Arc::new(OverlayServer::default());
+    let overlay_for_events = Arc::clone(&overlay);
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .manage(overlay)
+        .setup(move |app| {
+            app.listen("overlay.event", move |event| {
+                overlay_for_events.broadcast(event.payload());
+            });
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             app_version,
             read_config,
             write_config,
             keyring_get,
             keyring_set,
-            keyring_delete
+            keyring_delete,
+            overlay_start,
+            overlay_stop
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
