@@ -12,7 +12,7 @@ Agent Companion is a modular Agent OS for creators. Keep it modular.
 
 ## Commands
 
-- `pnpm install`
+- `pnpm install` (jika `pnpm` tidak di PATH, pakai `corepack pnpm ...`)
 - `pnpm dev` — desktop app
 - `pnpm test` / `pnpm lint` / `pnpm typecheck`
 - Add dep to a package: `pnpm --filter <pkg> add <dep>`
