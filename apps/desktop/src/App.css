@@ -58,6 +58,39 @@ header h1 {
   color: #7fd1a0;
 }
 
+.state.error {
+  color: #ff7b72;
+}
+
+.state.muted {
+  color: #8b8b93;
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.btn {
+  background: #2a2a33;
+  color: #e6e6ea;
+  border: 1px solid #3a3a45;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: #35353f;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 .hint {
   margin-top: 2rem;
   color: #8b8b93;

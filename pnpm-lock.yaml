@@ -83,6 +83,15 @@ importers:
 
   apps/desktop:
     dependencies:
+      '@agent/config':
+        specifier: workspace:*
+        version: link:../../core/config
+      '@agent/logging':
+        specifier: workspace:*
+        version: link:../../services/logging
+      '@agent/runtime':
+        specifier: workspace:*
+        version: link:../../core/runtime
       '@tauri-apps/api':
         specifier: ^2
         version: 2.11.1
