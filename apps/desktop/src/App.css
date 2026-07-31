@@ -1,0 +1,66 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #101014;
+  color: #e6e6ea;
+}
+
+.dashboard {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.version {
+  color: #8b8b93;
+  font-size: 0.85rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background: #1a1a21;
+  border: 1px solid #2a2a33;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #c8c8d0;
+}
+
+.state {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #7fd1a0;
+}
+
+.hint {
+  margin-top: 2rem;
+  color: #8b8b93;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

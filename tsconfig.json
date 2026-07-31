@@ -12,5 +12,12 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
+  "include": [
+    "core/**/*.ts",
+    "agents/**/*.ts",
+    "services/**/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.ts"
+  ],
   "exclude": ["node_modules", "dist", "target"]
 }

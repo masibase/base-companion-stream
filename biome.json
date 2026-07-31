@@ -6,6 +6,9 @@
       "!node_modules",
       "!dist",
       "!target",
+      "!apps/desktop/dist",
+      "!apps/desktop/node_modules",
+      "!apps/desktop/public",
       "!apps/desktop/src-tauri"
     ]
   },
