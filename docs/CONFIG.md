@@ -26,8 +26,8 @@ secrets are never stored here (see `docs/SECURITY.md`).
   },
 
   "chat": {
-    "youtube": { "enabled": false, "videoId": "", "replyPolicy": "approve" },
-    "twitch": { "enabled": false, "channel": "", "replyPolicy": "auto" },
+    "youtube": { "enabled": false, "videoId": "", "keyRef": "keyring:youtube", "replyPolicy": "approve" },
+    "twitch": { "enabled": false, "channel": "", "username": "", "tokenRef": "keyring:twitch", "replyPolicy": "auto" },
     "tiktok": { "enabled": false, "username": "", "replyPolicy": "deny" },
     "kick": { "enabled": false, "channel": "", "replyPolicy": "deny" }
   },
@@ -41,7 +41,7 @@ secrets are never stored here (see `docs/SECURITY.md`).
   "permissions": {
     "obs.sceneSwitch": "auto",
     "obs.sourceControl": "ask",
-    "chat.reply": "approve",
+    "chat.reply": "ask",
     "tokens.spend": "ask",
     "session.start": "auto",
     "session.end": "auto"

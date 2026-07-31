@@ -19,8 +19,19 @@ export interface AppConfig {
     autoListen: boolean;
   };
   chat: {
-    youtube: { enabled: boolean; videoId: string; replyPolicy: ReplyPolicy };
-    twitch: { enabled: boolean; channel: string; replyPolicy: ReplyPolicy };
+    youtube: {
+      enabled: boolean;
+      videoId: string;
+      keyRef: string;
+      replyPolicy: ReplyPolicy;
+    };
+    twitch: {
+      enabled: boolean;
+      channel: string;
+      username: string;
+      tokenRef: string;
+      replyPolicy: ReplyPolicy;
+    };
     tiktok: { enabled: boolean; username: string; replyPolicy: ReplyPolicy };
     kick: { enabled: boolean; channel: string; replyPolicy: ReplyPolicy };
   };
@@ -57,8 +68,19 @@ export function defaultConfig(): AppConfig {
       autoListen: true,
     },
     chat: {
-      youtube: { enabled: false, videoId: "", replyPolicy: "approve" },
-      twitch: { enabled: false, channel: "", replyPolicy: "auto" },
+      youtube: {
+        enabled: false,
+        videoId: "",
+        keyRef: "",
+        replyPolicy: "approve",
+      },
+      twitch: {
+        enabled: false,
+        channel: "",
+        username: "",
+        tokenRef: "",
+        replyPolicy: "auto",
+      },
       tiktok: { enabled: false, username: "", replyPolicy: "deny" },
       kick: { enabled: false, channel: "", replyPolicy: "deny" },
     },

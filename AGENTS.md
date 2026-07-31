@@ -20,7 +20,7 @@ Agent Companion is a modular Agent OS for creators. Keep it modular.
 ## Structure
 
 - `apps/` — desktop (Tauri), overlay, launcher
-- `core/` — orchestrator, event-bus, workflow-engine, provider-manager, plugin-manager, permission-manager
+- `core/` — orchestrator, event-bus, workflow-engine, provider-manager, plugin-manager, permission-manager, config, runtime
 - `agents/` — one folder per agent (nova, director, producer, moderator, researcher, translator, analyst, manager)
 - `services/` — one folder per capability (stt, tts, wake-word, chat-adapters, obs, logging, memory, summary)
 - `plugins/` — third-party extensions

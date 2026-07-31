@@ -5,7 +5,7 @@
 | Layer | Contents |
 |---|---|
 | 1. Shell | Tauri app (`apps/desktop`): windows, tray, hotkeys, capabilities/permissions, Configuration Manager |
-| 2. Orchestration | `core/`: event-bus, orchestrator, workflow-engine, permission-manager, plugin-manager |
+| 2. Orchestration | `core/`: event-bus, orchestrator, workflow-engine, permission-manager, plugin-manager, config, runtime |
 | 3. Agents | `agents/`: nova, director, producer, moderator, researcher, translator, analyst, manager |
 | 4. Integration | `services/`: stt, tts, wake-word, chat-adapters, obs, logging, memory, summary + `core/provider-manager` |
 | 5. Presentation | React UI: dashboard, settings, live console + `apps/overlay` (status, transcript, reply preview) |

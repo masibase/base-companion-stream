@@ -42,6 +42,27 @@ importers:
         specifier: ^3.2.0
         version: 3.2.7
 
+  agents/analyst:
+    dependencies:
+      '@agent/memory':
+        specifier: workspace:*
+        version: link:../../services/memory
+      '@agent/orchestrator':
+        specifier: workspace:*
+        version: link:../../core/orchestrator
+      '@agent/summary':
+        specifier: workspace:*
+        version: link:../../services/summary
+
+  agents/manager:
+    dependencies:
+      '@agent/memory':
+        specifier: workspace:*
+        version: link:../../services/memory
+      '@agent/orchestrator':
+        specifier: workspace:*
+        version: link:../../core/orchestrator
+
   agents/nova:
     dependencies:
       '@agent/event-bus':
@@ -117,6 +138,48 @@ importers:
   core/permission-manager: {}
 
   core/provider-manager: {}
+
+  core/runtime:
+    dependencies:
+      '@agent/analyst':
+        specifier: workspace:*
+        version: link:../../agents/analyst
+      '@agent/chat-adapters':
+        specifier: workspace:*
+        version: link:../../services/chat-adapters
+      '@agent/config':
+        specifier: workspace:*
+        version: link:../config
+      '@agent/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
+      '@agent/logging':
+        specifier: workspace:*
+        version: link:../../services/logging
+      '@agent/manager':
+        specifier: workspace:*
+        version: link:../../agents/manager
+      '@agent/memory':
+        specifier: workspace:*
+        version: link:../../services/memory
+      '@agent/nova':
+        specifier: workspace:*
+        version: link:../../agents/nova
+      '@agent/obs':
+        specifier: workspace:*
+        version: link:../../services/obs
+      '@agent/orchestrator':
+        specifier: workspace:*
+        version: link:../orchestrator
+      '@agent/permission-manager':
+        specifier: workspace:*
+        version: link:../permission-manager
+      '@agent/provider-manager':
+        specifier: workspace:*
+        version: link:../provider-manager
+      '@agent/summary':
+        specifier: workspace:*
+        version: link:../../services/summary
 
   core/workflow-engine:
     dependencies:
