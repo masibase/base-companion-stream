@@ -2,6 +2,7 @@ import type { Runtime } from "@agent/runtime";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { getRuntime } from "./runtime";
+import Settings from "./Settings";
 import "./App.css";
 
 interface Card {
@@ -56,6 +57,7 @@ export default function App() {
   const [bootError, setBootError] = useState<string | null>(null);
   const [sessionEnded, setSessionEnded] = useState(false);
   const [summary, setSummary] = useState<{ messageCount: number } | null>(null);
+  const [tab, setTab] = useState<"dashboard" | "settings">("dashboard");
 
   useEffect(() => {
     invoke<string>("app_version")
@@ -85,12 +87,31 @@ export default function App() {
       <header>
         <h1>Agent Companion</h1>
         {version && <span className="version">v{version}</span>}
+        <nav className="tabs">
+          <button
+            type="button"
+            className={`tab ${tab === "dashboard" ? "active" : ""}`}
+            onClick={() => setTab("dashboard")}
+          >
+            Dashboard
+          </button>
+          <button
+            type="button"
+            className={`tab ${tab === "settings" ? "active" : ""}`}
+            onClick={() => setTab("settings")}
+            disabled={!runtime}
+          >
+            Settings
+          </button>
+        </nav>
       </header>
       {bootError ? (
         <p className="state error">{bootError}</p>
+      ) : tab === "settings" && runtime ? (
+        <Settings runtime={runtime} />
       ) : (
         <section className="grid">
-          {(cards.length ? cards : []).map((c) => (
+          {cards.map((c) => (
             <article key={c.name} className="card">
               <h2>{c.name}</h2>
               <p className="state">{c.state}</p>

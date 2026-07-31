@@ -26,6 +26,84 @@ header h1 {
   font-size: 1.6rem;
 }
 
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.tab {
+  background: transparent;
+  color: #8b8b93;
+  border: 1px solid #2a2a33;
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #e6e6ea;
+  background: #2a2a33;
+}
+
+.tab:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+  max-width: 560px;
+}
+
+.settings h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #c8c8d0;
+}
+
+.settings label.row {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings input {
+  background: #101014;
+  border: 1px solid #2a2a33;
+  border-radius: 8px;
+  color: #e6e6ea;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.9rem;
+}
+
+.settings fieldset {
+  border: 1px solid #2a2a33;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.settings legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c8c8d0;
+  padding: 0 0.4rem;
+}
+
 .version {
   color: #8b8b93;
   font-size: 0.85rem;
