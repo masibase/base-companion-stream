@@ -10,7 +10,10 @@ post-production.
 
 ## Status
 
-> **Sprint 1 (Foundation)** — in progress. Windows desktop app: Tauri 2 + React + TypeScript.
+> **Sprint 1 (Foundation) — done.** Windows desktop app: Tauri 2 + React + TypeScript.
+> Runtime boots from `%APPDATA%/agent-companion/config.json`, secrets live in the OS
+> keyring (Windows Credential Manager), overlay served on `http://localhost:7935`,
+> CI green (lint + typecheck + test).
 
 ## Principles
 
@@ -39,7 +42,7 @@ post-production.
 ```
 agent-companion/
 ├── apps/        desktop (Tauri), overlay, launcher
-├── core/        orchestrator, event-bus, workflow-engine, provider-manager, plugin-manager, permission-manager
+├── core/        orchestrator, event-bus, workflow-engine, provider-manager, plugin-manager, permission-manager, config, runtime
 ├── agents/      nova, director, producer, moderator, researcher, translator, analyst, manager
 ├── services/    stt, tts, wake-word, chat-adapters, obs, logging, memory, summary
 ├── plugins/     third-party extensions
@@ -51,12 +54,26 @@ agent-companion/
 
 ## Getting started
 
-Prerequisites: Node 20+, pnpm 10, Rust toolchain, Windows 10/11 (WebView2).
+Prerequisites: Node 20+, pnpm 10 (or `corepack pnpm`), Rust toolchain, Windows 10/11 (WebView2).
 
 ```bash
 pnpm install
-pnpm dev
+pnpm test          # core, services, agents, runtime e2e
+pnpm lint
+pnpm typecheck
+pnpm --filter @agent/desktop tauri dev   # desktop app
 ```
+
+First run: Dashboard boots with defaults → **Settings** tab → enter API keys
+(OpenAI / Google / Twitch / OBS password — stored in the Windows Credential
+Manager, never on disk) → Save → restart → chat round-trip. Nova replies are
+gated by `chat.reply` permission: `ask` shows an Approvals card, `auto` replies
+directly, `deny` blocks.
+
+Overlay (OBS browser source): `http://localhost:7935` — live chat, Nova
+responses, and the post-live summary via SSE. TikTok/Kick need a chat proxy
+`baseUrl` (their chat APIs are unofficial; the adapter polls
+`<baseUrl>/messages` and refuses to fake an endpoint).
 
 ## Docs
 
