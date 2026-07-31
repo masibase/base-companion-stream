@@ -92,6 +92,9 @@ importers:
       '@agent/runtime':
         specifier: workspace:*
         version: link:../../core/runtime
+      '@agent/tts':
+        specifier: workspace:*
+        version: link:../../services/tts
       '@tauri-apps/api':
         specifier: ^2
         version: 2.11.1

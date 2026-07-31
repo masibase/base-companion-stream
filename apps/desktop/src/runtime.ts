@@ -1,6 +1,7 @@
 import type { ConfigStore } from "@agent/config";
 import { Logger } from "@agent/logging";
 import { createRuntime, type Runtime } from "@agent/runtime";
+import { WebSpeechTTS } from "@agent/tts";
 import { invoke } from "@tauri-apps/api/core";
 import { emit } from "@tauri-apps/api/event";
 
@@ -58,6 +59,16 @@ export function getRuntime(): Promise<Runtime> {
         });
       }
     }
+    // ponytail: voice mode = autoListen flag; speak nova replies aloud
+    const tts = new WebSpeechTTS(window.speechSynthesis as never);
+    rt.bus.on("response.ready", (event) => {
+      if (!rt.config.get().voice.autoListen || !tts.available()) return;
+      void tts
+        .speak((event.payload as { text?: string }).text ?? "")
+        .catch((err) =>
+          rt.logger.warn("tts.speak.failed", { error: String(err) }),
+        );
+    });
     return rt;
   });
   return runtimePromise;

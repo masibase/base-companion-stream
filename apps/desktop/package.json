@@ -16,7 +16,8 @@
     "@tauri-apps/plugin-opener": "^2",
     "@agent/runtime": "workspace:*",
     "@agent/logging": "workspace:*",
-    "@agent/config": "workspace:*"
+    "@agent/config": "workspace:*",
+    "@agent/tts": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",
