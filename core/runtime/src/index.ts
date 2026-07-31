@@ -42,6 +42,8 @@ export interface Runtime {
   memory: SessionMemory;
   orchestrator: Orchestrator;
   logger: Logger;
+  /** Resolve a pending "ask" permission request (see `permission.request`). */
+  respond: (requestId: string, allowed: boolean) => void;
   stop: () => Promise<void>;
 }
 
@@ -52,7 +54,33 @@ export async function createRuntime(opts: RuntimeOptions): Promise<Runtime> {
   await config.load();
 
   const cfg = config.get();
-  const perms = new PermissionManager(cfg.permissions);
+
+  const pending = new Map<string, (allowed: boolean) => void>();
+  let approvalSeq = 0;
+  const perms = new PermissionManager(cfg.permissions, (scope) => {
+    return new Promise((resolve) => {
+      const requestId = `req-${++approvalSeq}`;
+      pending.set(requestId, resolve);
+      void bus.emit(
+        createEvent("permission.request", "core/permission-manager", {
+          requestId,
+          scope,
+        }),
+      );
+    });
+  });
+  const respond = (requestId: string, allowed: boolean) => {
+    const resolve = pending.get(requestId);
+    if (!resolve) return;
+    pending.delete(requestId);
+    resolve(allowed);
+    void bus.emit(
+      createEvent("permission.resolved", "core/permission-manager", {
+        requestId,
+        allowed,
+      }),
+    );
+  };
   const providers = new ProviderManager();
 
   const openaiKey = await opts.apiKeyProvider?.(cfg.providers.primary.keyRef);
@@ -121,6 +149,7 @@ export async function createRuntime(opts: RuntimeOptions): Promise<Runtime> {
     memory,
     orchestrator,
     logger,
+    respond,
     async stop() {
       await bus.emit(
         createEvent("session.ended", "core/runtime", { sessionId: memory.id }),

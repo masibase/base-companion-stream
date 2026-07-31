@@ -106,3 +106,8 @@ All mutating calls must pass `core/permission-manager` first.
 | `workflow.started` / `workflow.completed` | workflow lifecycle | manager |
 | `agent.health` | agent failure/status | manager |
 | `permission.denied` | guard refused an action | permission-manager |
+| `permission.request` | "ask" mode — awaiting approval (`requestId`, `scope`) | permission-manager |
+| `permission.resolved` | approval answered (`requestId`, `allowed`) | permission-manager |
+
+Approval flow: "ask" mode emits `permission.request` and pauses the workflow; the shell
+resolves it via `runtime.respond(requestId, allowed)` (desktop: Approvals card).

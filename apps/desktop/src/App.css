@@ -79,6 +79,29 @@ header h1 {
   gap: 0.5rem;
 }
 
+.settings select {
+  background: #101014;
+  border: 1px solid #2a2a33;
+  border-radius: 8px;
+  color: #e6e6ea;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.muted {
+  color: #8b8b93;
+}
+
+.approval {
+  border-top: 1px solid #2a2a33;
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.approval p {
+  margin: 0;
+}
+
 .settings input {
   background: #101014;
   border: 1px solid #2a2a33;

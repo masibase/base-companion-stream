@@ -24,6 +24,9 @@ interface FormState {
   kickBaseUrl: string;
   obsEnabled: boolean;
   obsPassword: string;
+  replyMode: string;
+  sceneMode: string;
+  sourceMode: string;
 }
 
 function fromConfig(cfg: AppConfig): FormState {
@@ -44,6 +47,9 @@ function fromConfig(cfg: AppConfig): FormState {
     kickBaseUrl: cfg.chat.kick.baseUrl,
     obsEnabled: cfg.obs.enabled,
     obsPassword: "",
+    replyMode: cfg.permissions["chat.reply"],
+    sceneMode: cfg.permissions["obs.sceneSwitch"],
+    sourceMode: cfg.permissions["obs.sourceControl"],
   };
 }
 
@@ -93,7 +99,15 @@ export default function Settings({ runtime }: SettingsProps) {
           },
         },
         obs: { enabled: form.obsEnabled },
+        permissions: {
+          "chat.reply": form.replyMode,
+          "obs.sceneSwitch": form.sceneMode,
+          "obs.sourceControl": form.sourceMode,
+        },
       });
+      runtime.perms.setMode("chat.reply", form.replyMode as never);
+      runtime.perms.setMode("obs.sceneSwitch", form.sceneMode as never);
+      runtime.perms.setMode("obs.sourceControl", form.sourceMode as never);
       setSaved(true);
     } catch (err) {
       runtime.logger.error("settings.save.failed", { error: String(err) });
@@ -248,6 +262,43 @@ export default function Settings({ runtime }: SettingsProps) {
             value={form.obsPassword}
             onChange={(e) => set("obsPassword", e.target.value)}
           />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Permissions</legend>
+        <label className="row">
+          <span className="muted">chat.reply</span>
+          <select
+            value={form.replyMode}
+            onChange={(e) => set("replyMode", e.target.value)}
+          >
+            <option value="auto">auto</option>
+            <option value="ask">ask</option>
+            <option value="deny">deny</option>
+          </select>
+        </label>
+        <label className="row">
+          <span className="muted">obs.sceneSwitch</span>
+          <select
+            value={form.sceneMode}
+            onChange={(e) => set("sceneMode", e.target.value)}
+          >
+            <option value="auto">auto</option>
+            <option value="ask">ask</option>
+            <option value="deny">deny</option>
+          </select>
+        </label>
+        <label className="row">
+          <span className="muted">obs.sourceControl</span>
+          <select
+            value={form.sourceMode}
+            onChange={(e) => set("sourceMode", e.target.value)}
+          >
+            <option value="auto">auto</option>
+            <option value="ask">ask</option>
+            <option value="deny">deny</option>
+          </select>
         </label>
       </fieldset>
 

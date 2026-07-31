@@ -111,6 +111,68 @@ describe("runtime bootstrap", () => {
     expect(runtime.memory.all().map((e) => e.type)).toContain("chat.message");
   });
 
+  it("ask permission: nova waits, respond(true) lets it reply (human in control)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => ({
+        ok: true,
+        json: async () =>
+          url.includes("/chat/completions")
+            ? { choices: [{ message: { content: "ok, approved!" } }] }
+            : { data: [] },
+      })),
+    );
+
+    const cfg = defaultConfig();
+    cfg.obs.enabled = false;
+    cfg.permissions["chat.reply"] = "ask";
+    const store = new MemoryStore(structuredClone(cfg));
+    const twitch = new FakeTwitchAdapter();
+    const runtime = await createRuntime({
+      configStore: store,
+      sessionId: "sess-2",
+      apiKeyProvider: async () => "sk-test",
+      adapters: [twitch],
+      obsBridge: {
+        connect: async () => {},
+        disconnect: async () => {},
+      } as never,
+      logger: quietLogger,
+    });
+
+    const requests: Array<{ requestId: string; scope: string }> = [];
+    const responses: Array<{ text: string }> = [];
+    runtime.bus.on(
+      "permission.request",
+      (e) =>
+        void requests.push(e.payload as { requestId: string; scope: string }),
+    );
+    runtime.bus.on(
+      "response.ready",
+      (e) => void responses.push(e.payload as { text: string }),
+    );
+
+    twitch.emit({
+      id: "m2",
+      ts: new Date().toISOString(),
+      user: "bob",
+      text: "boleh balas?",
+      platform: "twitch",
+    });
+    await new Promise((resolve) => setTimeout(resolve, 30));
+
+    expect(requests).toHaveLength(1);
+    expect(requests[0]?.scope).toBe("chat.reply");
+    expect(responses).toHaveLength(0);
+
+    runtime.respond(requests[0]?.requestId ?? "", true);
+    await new Promise((resolve) => setTimeout(resolve, 30));
+
+    expect(responses).toHaveLength(1);
+    expect(responses[0]?.text).toBe("ok, approved!");
+    await runtime.stop();
+  });
+
   it("falls back to ollama when no API key (provider agnostic)", async () => {
     const cfg = defaultConfig();
     cfg.obs.enabled = false;

@@ -58,6 +58,9 @@ export default function App() {
   const [sessionEnded, setSessionEnded] = useState(false);
   const [summary, setSummary] = useState<{ messageCount: number } | null>(null);
   const [tab, setTab] = useState<"dashboard" | "settings">("dashboard");
+  const [pending, setPending] = useState<
+    Array<{ requestId: string; scope: string }>
+  >([]);
 
   useEffect(() => {
     invoke<string>("app_version")
@@ -67,6 +70,20 @@ export default function App() {
       .then((rt) => {
         rt.bus.on("summary.ready", (e) =>
           setSummary(e.payload as { messageCount: number }),
+        );
+        rt.bus.on("permission.request", (e) =>
+          setPending((prev) => [
+            ...prev,
+            e.payload as { requestId: string; scope: string },
+          ]),
+        );
+        rt.bus.on("permission.resolved", (e) =>
+          setPending((prev) =>
+            prev.filter(
+              (p) =>
+                p.requestId !== (e.payload as { requestId: string }).requestId,
+            ),
+          ),
         );
         setRuntime(rt);
       })
@@ -78,6 +95,10 @@ export default function App() {
       setSessionEnded(true);
       void invoke("overlay_stop").catch(() => {});
     });
+  };
+
+  const approve = (requestId: string, allowed: boolean) => {
+    runtime?.respond(requestId, allowed);
   };
 
   const cards = runtime ? runtimeCards(runtime) : [];
@@ -151,6 +172,32 @@ export default function App() {
               )}
             </div>
           </article>
+          {pending.length > 0 && (
+            <article className="card">
+              <h2>Approvals</h2>
+              {pending.map((p) => (
+                <div key={p.requestId} className="approval">
+                  <p className="state">{p.scope} wants permission</p>
+                  <div className="controls">
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => approve(p.requestId, true)}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => approve(p.requestId, false)}
+                    >
+                      Deny
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </article>
+          )}
         </section>
       )}
       <p className="hint">

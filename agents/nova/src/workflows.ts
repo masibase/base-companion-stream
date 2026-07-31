@@ -13,8 +13,8 @@ export function chatResponseWorkflow(
     steps: [
       {
         name: "guard",
-        run: (ctx) => {
-          ctx.allowed = perms.check("chat.reply").allowed;
+        run: async (ctx) => {
+          ctx.allowed = (await perms.request("chat.reply")).allowed;
         },
       },
       {
