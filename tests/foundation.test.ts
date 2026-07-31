@@ -1,8 +1,10 @@
 import { createEvent, EventBus } from "@agent/event-bus";
 import { Logger } from "@agent/logging";
+import { SessionMemory } from "@agent/memory";
 import { Orchestrator } from "@agent/orchestrator";
 import { PermissionManager } from "@agent/permission-manager";
 import { type Provider, ProviderManager } from "@agent/provider-manager";
+import { buildSummary } from "@agent/summary";
 import { runWorkflow, type Workflow } from "@agent/workflow-engine";
 import { describe, expect, it } from "vitest";
 
@@ -155,5 +157,41 @@ describe("foundation: W-01 live chat response", () => {
     orchestrator.stop();
     await bus.emit(createEvent("chat.message", "test", { text: "x" }));
     expect(calls).toBe(0);
+  });
+
+  it("W-07: memory records events and summary builds from them", async () => {
+    const bus = new EventBus();
+    const memory = new SessionMemory();
+    await memory.start("sess-1");
+    bus.on("chat.message", (e) => {
+      memory.record(e.type, e.source, e.payload);
+    });
+
+    await bus.emit(
+      createEvent("chat.message", "services/chat-adapters/twitch", {
+        user: "alice",
+        text: "first stream hype!",
+      }),
+    );
+    await bus.emit(
+      createEvent("chat.message", "services/chat-adapters/twitch", {
+        user: "alice",
+        text: "another one",
+      }),
+    );
+    await bus.emit(
+      createEvent("chat.message", "services/chat-adapters/youtube", {
+        user: "bob",
+        text: "hello",
+      }),
+    );
+
+    const summary = buildSummary(memory.all(), "sess-1");
+    expect(summary.messageCount).toBe(3);
+    expect(summary.uniqueUsers).toBe(2);
+    expect(summary.topUsers[0]).toEqual({ user: "alice", count: 2 });
+    expect(summary.highlights.map((h) => h.text)).toEqual([
+      "first stream hype!",
+    ]);
   });
 });

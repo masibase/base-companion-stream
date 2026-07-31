@@ -14,6 +14,9 @@ importers:
       '@agent/logging':
         specifier: workspace:*
         version: link:services/logging
+      '@agent/memory':
+        specifier: workspace:*
+        version: link:services/memory
       '@agent/orchestrator':
         specifier: workspace:*
         version: link:core/orchestrator
@@ -23,6 +26,9 @@ importers:
       '@agent/provider-manager':
         specifier: workspace:*
         version: link:core/provider-manager
+      '@agent/summary':
+        specifier: workspace:*
+        version: link:services/summary
       '@agent/workflow-engine':
         specifier: workspace:*
         version: link:core/workflow-engine
@@ -54,6 +60,15 @@ importers:
         specifier: workspace:*
         version: link:../../core/workflow-engine
 
+  core/config:
+    dependencies:
+      '@agent/event-bus':
+        specifier: workspace:*
+        version: link:../event-bus
+      '@agent/permission-manager':
+        specifier: workspace:*
+        version: link:../permission-manager
+
   core/event-bus: {}
 
   core/orchestrator:
@@ -83,6 +98,8 @@ importers:
 
   services/logging: {}
 
+  services/memory: {}
+
   services/obs:
     dependencies:
       obs-websocket-js:
@@ -90,6 +107,12 @@ importers:
         version: 5.0.8
 
   services/stt: {}
+
+  services/summary:
+    dependencies:
+      '@agent/memory':
+        specifier: workspace:*
+        version: link:../memory
 
   services/tts: {}
 
