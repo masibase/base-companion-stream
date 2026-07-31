@@ -28,8 +28,8 @@ secrets are never stored here (see `docs/SECURITY.md`).
   "chat": {
     "youtube": { "enabled": false, "videoId": "", "keyRef": "keyring:youtube", "replyPolicy": "approve" },
     "twitch": { "enabled": false, "channel": "", "username": "", "tokenRef": "keyring:twitch", "replyPolicy": "auto" },
-    "tiktok": { "enabled": false, "username": "", "replyPolicy": "deny" },
-    "kick": { "enabled": false, "channel": "", "replyPolicy": "deny" }
+    "tiktok": { "enabled": false, "username": "", "baseUrl": "", "replyPolicy": "deny" },
+    "kick": { "enabled": false, "channel": "", "baseUrl": "", "replyPolicy": "deny" }
   },
 
   "obs": { "enabled": true, "host": "localhost", "port": 4455, "passwordRef": "keyring:obs" },

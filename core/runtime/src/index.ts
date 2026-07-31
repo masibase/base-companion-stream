@@ -2,6 +2,8 @@ import { createAnalystAgent } from "@agent/analyst";
 import {
   type ChatAdapter,
   ChatHub,
+  KickAdapter,
+  TikTokAdapter,
   TwitchAdapter,
   YouTubeAdapter,
 } from "@agent/chat-adapters";
@@ -155,6 +157,18 @@ async function registerDefaultAdapters(
       username: tw.username || undefined,
       token,
     };
+  }
+
+  const tt = cfg.chat.tiktok;
+  if (tt.enabled && tt.username && tt.baseUrl) {
+    hub.register(new TikTokAdapter());
+    connectCfgs.tiktok = { username: tt.username, baseUrl: tt.baseUrl };
+  }
+
+  const kk = cfg.chat.kick;
+  if (kk.enabled && kk.channel && kk.baseUrl) {
+    hub.register(new KickAdapter());
+    connectCfgs.kick = { username: kk.channel, baseUrl: kk.baseUrl };
   }
 
   await hub.connectAll(connectCfgs);

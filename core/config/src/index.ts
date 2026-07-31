@@ -32,8 +32,18 @@ export interface AppConfig {
       tokenRef: string;
       replyPolicy: ReplyPolicy;
     };
-    tiktok: { enabled: boolean; username: string; replyPolicy: ReplyPolicy };
-    kick: { enabled: boolean; channel: string; replyPolicy: ReplyPolicy };
+    tiktok: {
+      enabled: boolean;
+      username: string;
+      baseUrl: string;
+      replyPolicy: ReplyPolicy;
+    };
+    kick: {
+      enabled: boolean;
+      channel: string;
+      baseUrl: string;
+      replyPolicy: ReplyPolicy;
+    };
   };
   obs: { enabled: boolean; host: string; port: number; passwordRef: string };
   overlay: { enabled: boolean; port: number; theme: string };
@@ -81,8 +91,13 @@ export function defaultConfig(): AppConfig {
         tokenRef: "",
         replyPolicy: "auto",
       },
-      tiktok: { enabled: false, username: "", replyPolicy: "deny" },
-      kick: { enabled: false, channel: "", replyPolicy: "deny" },
+      tiktok: {
+        enabled: false,
+        username: "",
+        baseUrl: "",
+        replyPolicy: "deny",
+      },
+      kick: { enabled: false, channel: "", baseUrl: "", replyPolicy: "deny" },
     },
     obs: {
       enabled: true,
